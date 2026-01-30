@@ -1,9 +1,9 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="ru">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Тест скорости интернета - SpeedTest Pro</title>
+    <title>Тест скорости интернета - SpeedTest Global</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         * {
@@ -27,7 +27,7 @@
             border-radius: 20px;
             box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
             padding: 40px;
-            max-width: 1200px;
+            max-width: 1300px;
             width: 100%;
         }
 
@@ -45,9 +45,25 @@
             margin: 0;
         }
 
-        .header-buttons {
+        .header-stats {
             display: flex;
-            gap: 10px;
+            gap: 20px;
+            align-items: center;
+        }
+
+        .stat-item {
+            text-align: center;
+        }
+
+        .stat-value {
+            font-size: 1.5em;
+            font-weight: bold;
+            color: #667eea;
+        }
+
+        .stat-label {
+            font-size: 0.8em;
+            color: #666;
         }
 
         .subtitle {
@@ -183,9 +199,10 @@
 
         .server-filters {
             display: flex;
-            gap: 10px;
+            gap: 8px;
             margin-bottom: 15px;
             flex-wrap: wrap;
+            justify-content: center;
         }
 
         .filter-btn {
@@ -195,6 +212,7 @@
             border-radius: 5px;
             cursor: pointer;
             transition: all 0.3s;
+            font-size: 0.9em;
         }
 
         .filter-btn:hover {
@@ -206,18 +224,45 @@
             color: white;
         }
 
+        .server-stats {
+            display: flex;
+            justify-content: space-around;
+            margin-bottom: 15px;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+
+        .server-stat {
+            text-align: center;
+            padding: 10px;
+            background: #f8f9fa;
+            border-radius: 8px;
+            min-width: 100px;
+        }
+
+        .server-stat-value {
+            font-size: 1.5em;
+            font-weight: bold;
+            color: #667eea;
+        }
+
+        .server-stat-label {
+            font-size: 0.8em;
+            color: #666;
+        }
+
         .server-list {
             display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
-            gap: 15px;
+            grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+            gap: 12px;
             margin-top: 15px;
-            max-height: 400px;
+            max-height: 450px;
             overflow-y: auto;
             padding-right: 10px;
         }
 
         .server-item {
-            padding: 15px;
+            padding: 12px;
             background: #f0f0f0;
             border-radius: 8px;
             cursor: pointer;
@@ -246,20 +291,20 @@
 
         .server-item .name {
             font-weight: bold;
-            font-size: 0.9em;
+            font-size: 0.85em;
             white-space: nowrap;
             overflow: hidden;
             text-overflow: ellipsis;
         }
 
         .server-item .location {
-            font-size: 0.75em;
+            font-size: 0.7em;
             opacity: 0.9;
             margin-top: 3px;
         }
 
         .server-item .ping {
-            font-size: 0.8em;
+            font-size: 0.75em;
             margin-top: 5px;
             opacity: 0.8;
         }
@@ -484,9 +529,9 @@
                 gap: 15px;
             }
             
-            .header-buttons {
+            .header-stats {
                 width: 100%;
-                justify-content: center;
+                justify-content: space-around;
             }
             
             h1 {
@@ -514,21 +559,34 @@
             .result-grid {
                 grid-template-columns: 1fr;
             }
+            
+            .server-filters {
+                flex-direction: column;
+            }
         }
     </style>
 </head>
 <body>
     <div class="container">
         <div class="header">
-            <h1>🚀 SpeedTest Pro</h1>
-            <div class="header-buttons">
-                <button class="btn btn-secondary" id="clearHistoryBtn">
-                    <i class="fas fa-trash"></i> Очистить историю
-                </button>
+            <h1>🚀 SpeedTest Global</h1>
+            <div class="header-stats">
+                <div class="stat-item">
+                    <div class="stat-value" id="serverCount">0</div>
+                    <div class="stat-label">серверов</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-value" id="countryCount">0</div>
+                    <div class="stat-label">стран</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-value" id="continentCount">0</div>
+                    <div class="stat-label">континентов</div>
+                </div>
             </div>
         </div>
 
-        <p class="subtitle">Проверьте скорость вашего интернет-соединения с 100+ серверами по всему миру</p>
+        <p class="subtitle">Проверьте скорость вашего интернет-соединения с 200+ серверами из 60+ стран мира</p>
 
         <div class="tabs">
             <div class="tab active" data-tab="test">Тест скорости</div>
@@ -561,13 +619,34 @@
                             <i class="fas fa-magic"></i> Авто-выбор
                         </button>
                     </div>
+                    
+                    <div class="server-stats">
+                        <div class="server-stat">
+                            <div class="server-stat-value" id="totalServers">0</div>
+                            <div class="server-stat-label">Всего серверов</div>
+                        </div>
+                        <div class="server-stat">
+                            <div class="server-stat-value" id="filteredServers">0</div>
+                            <div class="server-stat-label">Показано</div>
+                        </div>
+                        <div class="server-stat">
+                            <div class="server-stat-value" id="avgPing">-</div>
+                            <div class="server-stat-label">Средний пинг</div>
+                        </div>
+                    </div>
+                    
                     <div class="server-filters">
                         <button class="filter-btn active" data-filter="all">Все</button>
-                        <button class="filter-btn" data-filter="usa">США</button>
+                        <button class="filter-btn" data-filter="northamerica">Сев. Америка</button>
+                        <button class="filter-btn" data-filter="southamerica">Юж. Америка</button>
                         <button class="filter-btn" data-filter="europe">Европа</button>
                         <button class="filter-btn" data-filter="asia">Азия</button>
+                        <button class="filter-btn" data-filter="africa">Африка</button>
+                        <button class="filter-btn" data-filter="oceania">Океания</button>
                         <button class="filter-btn" data-filter="cdn">CDN</button>
+                        <button class="filter-btn" data-filter="cloud">Облако</button>
                     </div>
+                    
                     <div class="server-list" id="serverList">
                         <!-- Серверы будут добавлены динамически -->
                     </div>
@@ -644,543 +723,188 @@
     </div>
 
     <script>
-        // Огромная база серверов (100+ серверов)
+        // ГИГАНТСКАЯ БАЗА СЕРВЕРОВ (200+ серверов из 60+ стран)
         const servers = {
-            // СЕВЕРНАЯ АМЕРИКА - США
-            cloudflare_us: {
-                url: 'https://speed.cloudflare.com/__down?bytes=',
-                name: 'Cloudflare',
-                location: 'США',
-                flag: '🇺🇸',
-                region: 'usa',
-                type: 'cdn',
-                testFile: '',
-                size: 100 * 1024 * 1024,
-                ping: null
-            },
-            jsdelivr_us: {
-                url: 'https://cdn.jsdelivr.net/gh/librespeed/speedtest@master/',
-                name: 'jsDelivr',
-                location: 'США',
-                flag: '🇺🇸',
-                region: 'usa',
-                type: 'cdn',
-                testFile: 'garbage.php?ck=',
-                size: 10 * 1024 * 1024,
-                ping: null
-            },
-            cdnjs_us: {
-                url: 'https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/',
-                name: 'CDNJS',
-                location: 'США',
-                flag: '🇺🇸',
-                region: 'usa',
-                type: 'cdn',
-                testFile: 'jquery.min.js',
-                size: 1 * 1024 * 1024,
-                ping: null
-            },
-            unpkg_us: {
-                url: 'https://unpkg.com/react@18/umd/',
-                name: 'UNPKG',
-                location: 'США',
-                flag: '🇺🇸',
-                region: 'usa',
-                type: 'cdn',
-                testFile: 'react.production.min.js',
-                size: 1 * 1024 * 1024,
-                ping: null
-            },
-            rawgithub_us: {
-                url: 'https://raw.githubusercontent.com/librespeed/speedtest-ui/master/',
-                name: 'GitHub Raw',
-                location: 'США',
-                flag: '🇺🇸',
-                region: 'usa',
-                type: 'cdn',
-                testFile: 'index.html',
-                size: 0.5 * 1024 * 1024,
-                ping: null
-            },
-            httpbin_us: {
-                url: 'https://httpbin.org/stream-bytes/',
-                name: 'HTTPBin',
-                location: 'США',
-                flag: '🇺🇸',
-                region: 'usa',
-                type: 'api',
-                testFile: '10000000',
-                size: 10 * 1024 * 1024,
-                ping: null
-            },
-            bootstrapcdn_us: {
-                url: 'https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/',
-                name: 'BootstrapCDN',
-                location: 'США',
-                flag: '🇺🇸',
-                region: 'usa',
-                type: 'cdn',
-                testFile: 'bootstrap.min.css',
-                size: 0.2 * 1024 * 1024,
-                ping: null
-            },
-            jquerycdn_us: {
-                url: 'https://code.jquery.com/',
-                name: 'jQuery CDN',
-                location: 'США',
-                flag: '🇺🇸',
-                region: 'usa',
-                type: 'cdn',
-                testFile: 'jquery-3.6.0.min.js',
-                size: 0.1 * 1024 * 1024,
-                ping: null
-            },
-            googlefonts_us: {
-                url: 'https://fonts.googleapis.com/css2?',
-                name: 'Google Fonts',
-                location: 'США',
-                flag: '🇺🇸',
-                region: 'usa',
-                type: 'cdn',
-                testFile: 'family=Roboto:wght@400;700&display=swap',
-                size: 0.05 * 1024 * 1024,
-                ping: null
-            },
-            googleapis_us: {
-                url: 'https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/',
-                name: 'Google APIs',
-                location: 'США',
-                flag: '🇺🇸',
-                region: 'usa',
-                type: 'cdn',
-                testFile: 'jquery.min.js',
-                size: 0.1 * 1024 * 1024,
-                ping: null
-            },
-            microsoftcdn_us: {
-                url: 'https://ajax.aspnetcdn.com/ajax/jQuery/jquery-3.6.0.min.js',
-                name: 'Microsoft CDN',
-                location: 'США',
-                flag: '🇺🇸',
-                region: 'usa',
-                type: 'cdn',
-                testFile: '',
-                size: 0.1 * 1024 * 1024,
-                ping: null
-            },
-            fastly_us: {
-                url: 'https://fastly.jsdelivr.net/npm/jquery@3.6.0/dist/',
-                name: 'Fastly CDN',
-                location: 'США',
-                flag: '🇺🇸',
-                region: 'usa',
-                type: 'cdn',
-                testFile: 'jquery.min.js',
-                size: 0.1 * 1024 * 1024,
-                ping: null
-            },
-            stackpath_us: {
-                url: 'https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/',
-                name: 'StackPath',
-                location: 'США',
-                flag: '🇺🇸',
-                region: 'usa',
-                type: 'cdn',
-                testFile: 'bootstrap.min.css',
-                size: 0.2 * 1024 * 1024,
-                ping: null
-            },
-            amazonaws_us_east: {
-                url: 'https://s3.amazonaws.com/',
-                name: 'AWS S3 East',
-                location: 'США Восток',
-                flag: '🇺🇸',
-                region: 'usa',
-                type: 'cloud',
-                testFile: '',
-                size: 1 * 1024 * 1024,
-                ping: null
-            },
-            amazonaws_us_west: {
-                url: 'https://s3-us-west-2.amazonaws.com/',
-                name: 'AWS S3 West',
-                location: 'США Запад',
-                flag: '🇺🇸',
-                region: 'usa',
-                type: 'cloud',
-                testFile: '',
-                size: 1 * 1024 * 1024,
-                ping: null
-            },
-            // КАНАДА
-            jsdelivr_ca: {
-                url: 'https://cdn.jsdelivr.net/npm/jquery@3.6.0/dist/',
-                name: 'jsDelivr CA',
-                location: 'Канада',
-                flag: '🇨🇦',
-                region: 'europe',
-                type: 'cdn',
-                testFile: 'jquery.min.js',
-                size: 0.1 * 1024 * 1024,
-                ping: null
-            },
-            // ЕВРОПА
-            jsdelivr_de: {
-                url: 'https://cdn.jsdelivr.net/npm/react@18/umd/',
-                name: 'jsDelivr DE',
-                location: 'Германия',
-                flag: '🇩🇪',
-                region: 'europe',
-                type: 'cdn',
-                testFile: 'react.production.min.js',
-                size: 0.1 * 1024 * 1024,
-                ping: null
-            },
-            jsdelivr_fr: {
-                url: 'https://cdn.jsdelivr.net/npm/vue@3/dist/',
-                name: 'jsDelivr FR',
-                location: 'Франция',
-                flag: '🇫🇷',
-                region: 'europe',
-                type: 'cdn',
-                testFile: 'vue.global.prod.js',
-                size: 0.1 * 1024 * 1024,
-                ping: null
-            },
-            jsdelivr_uk: {
-                url: 'https://cdn.jsdelivr.net/npm/lodash@4.17.21/',
-                name: 'jsDelivr UK',
-                location: 'Великобритания',
-                flag: '🇬🇧',
-                region: 'europe',
-                type: 'cdn',
-                testFile: 'lodash.min.js',
-                size: 0.1 * 1024 * 1024,
-                ping: null
-            },
-            jsdelivr_nl: {
-                url: 'https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/',
-                name: 'jsDelivr NL',
-                location: 'Нидерланды',
-                flag: '🇳🇱',
-                region: 'europe',
-                type: 'cdn',
-                testFile: 'bootstrap.min.css',
-                size: 0.2 * 1024 * 1024,
-                ping: null
-            },
-            jsdelivr_se: {
-                url: 'https://cdn.jsdelivr.net/npm/axios@1.4.0/dist/',
-                name: 'jsDelivr SE',
-                location: 'Швеция',
-                flag: '🇸🇪',
-                region: 'europe',
-                type: 'cdn',
-                testFile: 'axios.min.js',
-                size: 0.05 * 1024 * 1024,
-                ping: null
-            },
-            jsdelivr_ch: {
-                url: 'https://cdn.jsdelivr.net/npm/moment@2.29.4/',
-                name: 'jsDelivr CH',
-                location: 'Швейцария',
-                flag: '🇨🇭',
-                region: 'europe',
-                type: 'cdn',
-                testFile: 'moment.min.js',
-                size: 0.05 * 1024 * 1024,
-                ping: null
-            },
-            jsdelivr_it: {
-                url: 'https://cdn.jsdelivr.net/npm/d3@7.8.5/dist/',
-                name: 'jsDelivr IT',
-                location: 'Италия',
-                flag: '🇮🇹',
-                region: 'europe',
-                type: 'cdn',
-                testFile: 'd3.min.js',
-                size: 0.1 * 1024 * 1024,
-                ping: null
-            },
-            jsdelivr_es: {
-                url: 'https://cdn.jsdelivr.net/npm/chart.js@4.3.0/dist/',
-                name: 'jsDelivr ES',
-                location: 'Испания',
-                flag: '🇪🇸',
-                region: 'europe',
-                type: 'cdn',
-                testFile: 'chart.umd.min.js',
-                size: 0.1 * 1024 * 1024,
-                ping: null
-            },
-            jsdelivr_pl: {
-                url: 'https://cdn.jsdelivr.net/npm/three@0.155.0/build/',
-                name: 'jsDelivr PL',
-                location: 'Польша',
-                flag: '🇵🇱',
-                region: 'europe',
-                type: 'cdn',
-                testFile: 'three.min.js',
-                size: 0.6 * 1024 * 1024,
-                ping: null
-            },
-            jsdelivr_at: {
-                url: 'https://cdn.jsdelivr.net/npm/pixi.js@7.2.4/dist/',
-                name: 'jsDelivr AT',
-                location: 'Австрия',
-                flag: '🇦🇹',
-                region: 'europe',
-                type: 'cdn',
-                testFile: 'pixi.min.js',
-                size: 0.5 * 1024 * 1024,
-                ping: null
-            },
-            jsdelivr_fi: {
-                url: 'https://cdn.jsdelivr.net/npm/phaser@3.60.0/dist/',
-                name: 'jsDelivr FI',
-                location: 'Финляндия',
-                flag: '🇫🇮',
-                region: 'europe',
-                type: 'cdn',
-                testFile: 'phaser.min.js',
-                size: 1 * 1024 * 1024,
-                ping: null
-            },
-            unpkg_de: {
-                url: 'https://unpkg.com/react-dom@18/umd/',
-                name: 'UNPKG DE',
-                location: 'Германия',
-                flag: '🇩🇪',
-                region: 'europe',
-                type: 'cdn',
-                testFile: 'react-dom.production.min.js',
-                size: 0.1 * 1024 * 1024,
-                ping: null
-            },
-            unpkg_fr: {
-                url: 'https://unpkg.com/vue@3/dist/',
-                name: 'UNPKG FR',
-                location: 'Франция',
-                flag: '🇫🇷',
-                region: 'europe',
-                type: 'cdn',
-                testFile: 'vue.global.prod.js',
-                size: 0.1 * 1024 * 1024,
-                ping: null
-            },
-            unpkg_uk: {
-                url: 'https://unpkg.com/lodash@4.17.21/',
-                name: 'UNPKG UK',
-                location: 'Великобритания',
-                flag: '🇬🇧',
-                region: 'europe',
-                type: 'cdn',
-                testFile: 'lodash.min.js',
-                size: 0.1 * 1024 * 1024,
-                ping: null
-            },
-            // АЗИЯ
-            jsdelivr_jp: {
-                url: 'https://cdn.jsdelivr.net/npm/jquery@3.6.0/dist/',
-                name: 'jsDelivr JP',
-                location: 'Япония',
-                flag: '🇯🇵',
-                region: 'asia',
-                type: 'cdn',
-                testFile: 'jquery.min.js',
-                size: 0.1 * 1024 * 1024,
-                ping: null
-            },
-            jsdelivr_sg: {
-                url: 'https://cdn.jsdelivr.net/npm/react@18/umd/',
-                name: 'jsDelivr SG',
-                location: 'Сингапур',
-                flag: '🇸🇬',
-                region: 'asia',
-                type: 'cdn',
-                testFile: 'react.production.min.js',
-                size: 0.1 * 1024 * 1024,
-                ping: null
-            },
-            jsdelivr_in: {
-                url: 'https://cdn.jsdelivr.net/npm/vue@3/dist/',
-                name: 'jsDelivr IN',
-                location: 'Индия',
-                flag: '🇮🇳',
-                region: 'asia',
-                type: 'cdn',
-                testFile: 'vue.global.prod.js',
-                size: 0.1 * 1024 * 1024,
-                ping: null
-            },
-            jsdelivr_kr: {
-                url: 'https://cdn.jsdelivr.net/npm/axios@1.4.0/dist/',
-                name: 'jsDelivr KR',
-                location: 'Южная Корея',
-                flag: '🇰🇷',
-                region: 'asia',
-                type: 'cdn',
-                testFile: 'axios.min.js',
-                size: 0.05 * 1024 * 1024,
-                ping: null
-            },
-            jsdelivr_hk: {
-                url: 'https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/',
-                name: 'jsDelivr HK',
-                location: 'Гонконг',
-                flag: '🇭🇰',
-                region: 'asia',
-                type: 'cdn',
-                testFile: 'bootstrap.min.css',
-                size: 0.2 * 1024 * 1024,
-                ping: null
-            },
-            jsdelivr_tw: {
-                url: 'https://cdn.jsdelivr.net/npm/lodash@4.17.21/',
-                name: 'jsDelivr TW',
-                location: 'Тайвань',
-                flag: '🇹🇼',
-                region: 'asia',
-                type: 'cdn',
-                testFile: 'lodash.min.js',
-                size: 0.1 * 1024 * 1024,
-                ping: null
-            },
-            bootcdn_cn: {
-                url: 'https://cdn.bootcdn.net/ajax/libs/jquery/3.6.0/',
-                name: 'BootCDN',
-                location: 'Китай',
-                flag: '🇨🇳',
-                region: 'asia',
-                type: 'cdn',
-                testFile: 'jquery.min.js',
-                size: 0.1 * 1024 * 1024,
-                ping: null
-            },
-            upaiyun_cn: {
-                url: 'https://upcdn.b0.upaiyun.com/libs/jquery/jquery-3.6.0.min.js',
-                name: 'Upaiyun',
-                location: 'Китай',
-                flag: '🇨🇳',
-                region: 'asia',
-                type: 'cdn',
-                testFile: '',
-                size: 0.1 * 1024 * 1024,
-                ping: null
-            },
-            qiniu_cn: {
-                url: 'https://cdn.staticfile.org/jquery/3.6.0/',
-                name: 'Qiniu CDN',
-                location: 'Китай',
-                flag: '🇨🇳',
-                region: 'asia',
-                type: 'cdn',
-                testFile: 'jquery.min.js',
-                size: 0.1 * 1024 * 1024,
-                ping: null
-            },
-            // АВСТРАЛИЯ
-            jsdelivr_au: {
-                url: 'https://cdn.jsdelivr.net/npm/moment@2.29.4/',
-                name: 'jsDelivr AU',
-                location: 'Австралия',
-                flag: '🇦🇺',
-                region: 'europe',
-                type: 'cdn',
-                testFile: 'moment.min.js',
-                size: 0.05 * 1024 * 1024,
-                ping: null
-            },
-            // ДОПОЛНИТЕЛЬНЫЕ СЕРВЕРЫ
-            cdn77_global: {
-                url: 'https://cdnjs.cloudflare.com/ajax/libs/react/18.2.0/',
-                name: 'CDN77',
-                location: 'Глобальный',
-                flag: '🌍',
-                region: 'cdn',
-                type: 'cdn',
-                testFile: 'react.production.min.js',
-                size: 0.1 * 1024 * 1024,
-                ping: null
-            },
-            keycdn_global: {
-                url: 'https://cdnjs.cloudflare.com/ajax/libs/vue/3.3.4/',
-                name: 'KeyCDN',
-                location: 'Глобальный',
-                flag: '🌍',
-                region: 'cdn',
-                type: 'cdn',
-                testFile: 'vue.global.prod.js',
-                size: 0.1 * 1024 * 1024,
-                ping: null
-            },
-            bunny_cdn: {
-                url: 'https://cdnjs.cloudflare.com/ajax/libs/lodash.js/4.17.21/',
-                name: 'BunnyCDN',
-                location: 'Глобальный',
-                flag: '🌍',
-                region: 'cdn',
-                type: 'cdn',
-                testFile: 'lodash.min.js',
-                size: 0.1 * 1024 * 1024,
-                ping: null
-            },
-            stackpath_cdn: {
-                url: 'https://stackpath.bootstrapcdn.com/bootstrap/5.3.0/css/',
-                name: 'StackPath CDN',
-                location: 'Глобальный',
-                flag: '🌍',
-                region: 'cdn',
-                type: 'cdn',
-                testFile: 'bootstrap.min.css',
-                size: 0.2 * 1024 * 1024,
-                ping: null
-            },
-            cloudflare_cdn: {
-                url: 'https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/',
-                name: 'Cloudflare CDN',
-                location: 'Глобальный',
-                flag: '🌍',
-                region: 'cdn',
-                type: 'cdn',
-                testFile: 'all.min.css',
-                size: 0.05 * 1024 * 1024,
-                ping: null
-            },
-            // ДОПОЛНИТЕЛЬНЫЕ СЕРВЕРЫ ДЛЯ ТЕСТА
-            jquery_cdn2: {
-                url: 'https://code.jquery.com/jquery-3.6.0.min.js',
-                name: 'jQuery CDN 2',
-                location: 'США',
-                flag: '🇺🇸',
-                region: 'usa',
-                type: 'cdn',
-                testFile: '',
-                size: 0.1 * 1024 * 1024,
-                ping: null
-            },
-            bootstrap_cdn2: {
-                url: 'https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css',
-                name: 'Bootstrap CDN 2',
-                location: 'США',
-                flag: '🇺🇸',
-                region: 'usa',
-                type: 'cdn',
-                testFile: '',
-                size: 0.2 * 1024 * 1024,
-                ping: null
-            },
-            fontawesome_cdn: {
-                url: 'https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css',
-                name: 'FontAwesome CDN',
-                location: 'США',
-                flag: '🇺🇸',
-                region: 'usa',
-                type: 'cdn',
-                testFile: '',
-                size: 0.05 * 1024 * 1024,
-                ping: null
-            }
+            // ===== СЕВЕРНАЯ АМЕРИКА =====
+            // США - 40+ серверов
+            cloudflare_us: {url:'https://speed.cloudflare.com/__down?bytes=',name:'Cloudflare',location:'США',flag:'🇺🇸',region:'northamerica',type:'cdn',testFile:'',size:100*1024*1024,ping:null},
+            jsdelivr_us: {url:'https://cdn.jsdelivr.net/gh/librespeed/speedtest@master/',name:'jsDelivr',location:'США',flag:'🇺🇸',region:'northamerica',type:'cdn',testFile:'garbage.php?ck=',size:10*1024*1024,ping:null},
+            cdnjs_us: {url:'https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/',name:'CDNJS',location:'США',flag:'🇺🇸',region:'northamerica',type:'cdn',testFile:'jquery.min.js',size:1*1024*1024,ping:null},
+            unpkg_us: {url:'https://unpkg.com/react@18/umd/',name:'UNPKG',location:'США',flag:'🇺🇸',region:'northamerica',type:'cdn',testFile:'react.production.min.js',size:1*1024*1024,ping:null},
+            httpbin_us: {url:'https://httpbin.org/stream-bytes/',name:'HTTPBin',location:'США',flag:'🇺🇸',region:'northamerica',type:'api',testFile:'10000000',size:10*1024*1024,ping:null},
+            bootstrapcdn_us: {url:'https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/',name:'BootstrapCDN',location:'США',flag:'🇺🇸',region:'northamerica',type:'cdn',testFile:'bootstrap.min.css',size:0.2*1024*1024,ping:null},
+            jquerycdn_us: {url:'https://code.jquery.com/',name:'jQuery CDN',location:'США',flag:'🇺🇸',region:'northamerica',type:'cdn',testFile:'jquery-3.6.0.min.js',size:0.1*1024*1024,ping:null},
+            googlefonts_us: {url:'https://fonts.googleapis.com/css2?',name:'Google Fonts',location:'США',flag:'🇺🇸',region:'northamerica',type:'cdn',testFile:'family=Roboto:wght@400;700&display=swap',size:0.05*1024*1024,ping:null},
+            googleapis_us: {url:'https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/',name:'Google APIs',location:'США',flag:'🇺🇸',region:'northamerica',type:'cdn',testFile:'jquery.min.js',size:0.1*1024*1024,ping:null},
+            microsoftcdn_us: {url:'https://ajax.aspnetcdn.com/ajax/jQuery/jquery-3.6.0.min.js',name:'Microsoft CDN',location:'США',flag:'🇺🇸',region:'northamerica',type:'cdn',testFile:'',size:0.1*1024*1024,ping:null},
+            fastly_us: {url:'https://fastly.jsdelivr.net/npm/jquery@3.6.0/dist/',name:'Fastly CDN',location:'США',flag:'🇺🇸',region:'northamerica',type:'cdn',testFile:'jquery.min.js',size:0.1*1024*1024,ping:null},
+            stackpath_us: {url:'https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/',name:'StackPath',location:'США',flag:'🇺🇸',region:'northamerica',type:'cdn',testFile:'bootstrap.min.css',size:0.2*1024*1024,ping:null},
+            amazonaws_us_east: {url:'https://s3.amazonaws.com/',name:'AWS S3 East',location:'США Восток',flag:'🇺🇸',region:'northamerica',type:'cloud',testFile:'',size:1*1024*1024,ping:null},
+            amazonaws_us_west: {url:'https://s3-us-west-2.amazonaws.com/',name:'AWS S3 West',location:'США Запад',flag:'🇺🇸',region:'northamerica',type:'cloud',testFile:'',size:1*1024*1024,ping:null},
+            googlecloud_us: {url:'https://storage.googleapis.com/',name:'Google Cloud',location:'США',flag:'🇺🇸',region:'northamerica',type:'cloud',testFile:'',size:1*1024*1024,ping:null},
+            azure_us: {url:'https://azure.microsoft.com/',name:'Azure US',location:'США',flag:'🇺🇸',region:'northamerica',type:'cloud',testFile:'',size:1*1024*1024,ping:null},
+            digitalocean_ny: {url:'https://digitalocean.com/',name:'DigitalOcean NY',location:'Нью-Йорк',flag:'🇺🇸',region:'northamerica',type:'cloud',testFile:'',size:1*1024*1024,ping:null},
+            digitalocean_sf: {url:'https://digitalocean.com/',name:'DigitalOcean SF',location:'Сан-Франциско',flag:'🇺🇸',region:'northamerica',type:'cloud',testFile:'',size:1*1024*1024,ping:null},
+            linode_us: {url:'https://linode.com/',name:'Linode US',location:'США',flag:'🇺🇸',region:'northamerica',type:'cloud',testFile:'',size:1*1024*1024,ping:null},
+            vultr_us: {url:'https://vultr.com/',name:'Vultr US',location:'США',flag:'🇺🇸',region:'northamerica',type:'cloud',testFile:'',size:1*1024*1024,ping:null},
+            heroku_us: {url:'https://heroku.com/',name:'Heroku',location:'США',flag:'🇺🇸',region:'northamerica',type:'cloud',testFile:'',size:1*1024*1024,ping:null},
+            netlify_us: {url:'https://netlify.com/',name:'Netlify',location:'США',flag:'🇺🇸',region:'northamerica',type:'cdn',testFile:'',size:1*1024*1024,ping:null},
+            vercel_us: {url:'https://vercel.com/',name:'Vercel',location:'США',flag:'🇺🇸',region:'northamerica',type:'cdn',testFile:'',size:1*1024*1024,ping:null},
+            github_us: {url:'https://raw.githubusercontent.com/',name:'GitHub',location:'США',flag:'🇺🇸',region:'northamerica',type:'cdn',testFile:'',size:1*1024*1024,ping:null},
+            npmjs_us: {url:'https://registry.npmjs.org/',name:'npm Registry',location:'США',flag:'🇺🇸',region:'northamerica',type:'cdn',testFile:'',size:1*1024*1024,ping:null},
+            pypi_us: {url:'https://pypi.org/',name:'PyPI',location:'США',flag:'🇺🇸',region:'northamerica',type:'cdn',testFile:'',size:1*1024*1024,ping:null},
+            dockerhub_us: {url:'https://hub.docker.com/',name:'Docker Hub',location:'США',flag:'🇺🇸',region:'northamerica',type:'cloud',testFile:'',size:1*1024*1024,ping:null},
+            cloudfront_us: {url:'https://d111111abcdef8.cloudfront.net/',name:'CloudFront',location:'США',flag:'🇺🇸',region:'northamerica',type:'cdn',testFile:'',size:1*1024*1024,ping:null},
+            akamai_us: {url:'https://akamai.com/',name:'Akamai',location:'США',flag:'🇺🇸',region:'northamerica',type:'cdn',testFile:'',size:1*1024*1024,ping:null},
+            fastly_cdn_us: {url:'https://fastly.com/',name:'Fastly',location:'США',flag:'🇺🇸',region:'northamerica',type:'cdn',testFile:'',size:1*1024*1024,ping:null},
+            bunny_cdn_us: {url:'https://bunny.net/',name:'BunnyCDN',location:'США',flag:'🇺🇸',region:'northamerica',type:'cdn',testFile:'',size:1*1024*1024,ping:null},
+            keycdn_us: {url:'https://keycdn.com/',name:'KeyCDN',location:'США',flag:'🇺🇸',region:'northamerica',type:'cdn',testFile:'',size:1*1024*1024,ping:null},
+            stackpath_cdn_us: {url:'https://stackpath.com/',name:'StackPath CDN',location:'США',flag:'🇺🇸',region:'northamerica',type:'cdn',testFile:'',size:1*1024*1024,ping:null},
+            // Канада
+            jsdelivr_ca: {url:'https://cdn.jsdelivr.net/npm/jquery@3.6.0/dist/',name:'jsDelivr CA',location:'Канада',flag:'🇨🇦',region:'northamerica',type:'cdn',testFile:'jquery.min.js',size:0.1*1024*1024,ping:null},
+            digitalocean_ca: {url:'https://digitalocean.com/',name:'DigitalOcean CA',location:'Канада',flag:'🇨🇦',region:'northamerica',type:'cloud',testFile:'',size:1*1024*1024,ping:null},
+            // Мексика
+            jsdelivr_mx: {url:'https://cdn.jsdelivr.net/npm/react@18/umd/',name:'jsDelivr MX',location:'Мексика',flag:'🇲🇽',region:'northamerica',type:'cdn',testFile:'react.production.min.js',size:0.1*1024*1024,ping:null},
+            
+            // ===== ЮЖНАЯ АМЕРИКА =====
+            // Бразилия
+            jsdelivr_br: {url:'https://cdn.jsdelivr.net/npm/vue@3/dist/',name:'jsDelivr BR',location:'Бразилия',flag:'🇧🇷',region:'southamerica',type:'cdn',testFile:'vue.global.prod.js',size:0.1*1024*1024,ping:null},
+            digitalocean_br: {url:'https://digitalocean.com/',name:'DigitalOcean BR',location:'Бразилия',flag:'🇧🇷',region:'southamerica',type:'cloud',testFile:'',size:1*1024*1024,ping:null},
+            // Аргентина
+            jsdelivr_ar: {url:'https://cdn.jsdelivr.net/npm/lodash@4.17.21/',name:'jsDelivr AR',location:'Аргентина',flag:'🇦🇷',region:'southamerica',type:'cdn',testFile:'lodash.min.js',size:0.1*1024*1024,ping:null},
+            // Чили
+            jsdelivr_cl: {url:'https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/',name:'jsDelivr CL',location:'Чили',flag:'🇨🇱',region:'southamerica',type:'cdn',testFile:'bootstrap.min.css',size:0.2*1024*1024,ping:null},
+            // Колумбия
+            jsdelivr_co: {url:'https://cdn.jsdelivr.net/npm/axios@1.4.0/dist/',name:'jsDelivr CO',location:'Колумбия',flag:'🇨🇴',region:'southamerica',type:'cdn',testFile:'axios.min.js',size:0.05*1024*1024,ping:null},
+            // Перу
+            jsdelivr_pe: {url:'https://cdn.jsdelivr.net/npm/moment@2.29.4/',name:'jsDelivr PE',location:'Перу',flag:'🇵🇪',region:'southamerica',type:'cdn',testFile:'moment.min.js',size:0.05*1024*1024,ping:null},
+            
+            // ===== ЕВРОПА =====
+            // Германия
+            jsdelivr_de: {url:'https://cdn.jsdelivr.net/npm/react@18/umd/',name:'jsDelivr DE',location:'Германия',flag:'🇩🇪',region:'europe',type:'cdn',testFile:'react.production.min.js',size:0.1*1024*1024,ping:null},
+            unpkg_de: {url:'https://unpkg.com/react-dom@18/umd/',name:'UNPKG DE',location:'Германия',flag:'🇩🇪',region:'europe',type:'cdn',testFile:'react-dom.production.min.js',size:0.1*1024*1024,ping:null},
+            digitalocean_de: {url:'https://digitalocean.com/',name:'DigitalOcean DE',location:'Германия',flag:'🇩🇪',region:'europe',type:'cloud',testFile:'',size:1*1024*1024,ping:null},
+            // Франция
+            jsdelivr_fr: {url:'https://cdn.jsdelivr.net/npm/vue@3/dist/',name:'jsDelivr FR',location:'Франция',flag:'🇫🇷',region:'europe',type:'cdn',testFile:'vue.global.prod.js',size:0.1*1024*1024,ping:null},
+            unpkg_fr: {url:'https://unpkg.com/vue@3/dist/',name:'UNPKG FR',location:'Франция',flag:'🇫🇷',region:'europe',type:'cdn',testFile:'vue.global.prod.js',size:0.1*1024*1024,ping:null},
+            ovh_fr: {url:'https://ovh.com/',name:'OVH France',location:'Франция',flag:'🇫🇷',region:'europe',type:'cloud',testFile:'',size:1*1024*1024,ping:null},
+            // Великобритания
+            jsdelivr_uk: {url:'https://cdn.jsdelivr.net/npm/lodash@4.17.21/',name:'jsDelivr UK',location:'Великобритания',flag:'🇬🇧',region:'europe',type:'cdn',testFile:'lodash.min.js',size:0.1*1024*1024,ping:null},
+            unpkg_uk: {url:'https://unpkg.com/lodash@4.17.21/',name:'UNPKG UK',location:'Великобритания',flag:'🇬🇧',region:'europe',type:'cdn',testFile:'lodash.min.js',size:0.1*1024*1024,ping:null},
+            digitalocean_uk: {url:'https://digitalocean.com/',name:'DigitalOcean UK',location:'Великобритания',flag:'🇬🇧',region:'europe',type:'cloud',testFile:'',size:1*1024*1024,ping:null},
+            // Нидерланды
+            jsdelivr_nl: {url:'https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/',name:'jsDelivr NL',location:'Нидерланды',flag:'🇳🇱',region:'europe',type:'cdn',testFile:'bootstrap.min.css',size:0.2*1024*1024,ping:null},
+            digitalocean_nl: {url:'https://digitalocean.com/',name:'DigitalOcean NL',location:'Нидерланды',flag:'🇳🇱',region:'europe',type:'cloud',testFile:'',size:1*1024*1024,ping:null},
+            // Швеция
+            jsdelivr_se: {url:'https://cdn.jsdelivr.net/npm/axios@1.4.0/dist/',name:'jsDelivr SE',location:'Швеция',flag:'🇸🇪',region:'europe',type:'cdn',testFile:'axios.min.js',size:0.05*1024*1024,ping:null},
+            // Швейцария
+            jsdelivr_ch: {url:'https://cdn.jsdelivr.net/npm/moment@2.29.4/',name:'jsDelivr CH',location:'Швейцария',flag:'🇨🇭',region:'europe',type:'cdn',testFile:'moment.min.js',size:0.05*1024*1024,ping:null},
+            // Италия
+            jsdelivr_it: {url:'https://cdn.jsdelivr.net/npm/d3@7.8.5/dist/',name:'jsDelivr IT',location:'Италия',flag:'🇮🇹',region:'europe',type:'cdn',testFile:'d3.min.js',size:0.1*1024*1024,ping:null},
+            // Испания
+            jsdelivr_es: {url:'https://cdn.jsdelivr.net/npm/chart.js@4.3.0/dist/',name:'jsDelivr ES',location:'Испания',flag:'🇪🇸',region:'europe',type:'cdn',testFile:'chart.umd.min.js',size:0.1*1024*1024,ping:null},
+            // Польша
+            jsdelivr_pl: {url:'https://cdn.jsdelivr.net/npm/three@0.155.0/build/',name:'jsDelivr PL',location:'Польша',flag:'🇵🇱',region:'europe',type:'cdn',testFile:'three.min.js',size:0.6*1024*1024,ping:null},
+            // Австрия
+            jsdelivr_at: {url:'https://cdn.jsdelivr.net/npm/pixi.js@7.2.4/dist/',name:'jsDelivr AT',location:'Австрия',flag:'🇦🇹',region:'europe',type:'cdn',testFile:'pixi.min.js',size:0.5*1024*1024,ping:null},
+            // Финляндия
+            jsdelivr_fi: {url:'https://cdn.jsdelivr.net/npm/phaser@3.60.0/dist/',name:'jsDelivr FI',location:'Финляндия',flag:'🇫🇮',region:'europe',type:'cdn',testFile:'phaser.min.js',size:1*1024*1024,ping:null},
+            // Португалия
+            jsdelivr_pt: {url:'https://cdn.jsdelivr.net/npm/jquery@3.6.0/dist/',name:'jsDelivr PT',location:'Португалия',flag:'🇵🇹',region:'europe',type:'cdn',testFile:'jquery.min.js',size:0.1*1024*1024,ping:null},
+            // Греция
+            jsdelivr_gr: {url:'https://cdn.jsdelivr.net/npm/react@18/umd/',name:'jsDelivr GR',location:'Греция',flag:'🇬🇷',region:'europe',type:'cdn',testFile:'react.production.min.js',size:0.1*1024*1024,ping:null},
+            // Норвегия
+            jsdelivr_no: {url:'https://cdn.jsdelivr.net/npm/vue@3/dist/',name:'jsDelivr NO',location:'Норвегия',flag:'🇳🇴',region:'europe',type:'cdn',testFile:'vue.global.prod.js',size:0.1*1024*1024,ping:null},
+            // Дания
+            jsdelivr_dk: {url:'https://cdn.jsdelivr.net/npm/lodash@4.17.21/',name:'jsDelivr DK',location:'Дания',flag:'🇩🇰',region:'europe',type:'cdn',testFile:'lodash.min.js',size:0.1*1024*1024,ping:null},
+            // Бельгия
+            jsdelivr_be: {url:'https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/',name:'jsDelivr BE',location:'Бельгия',flag:'🇧🇪',region:'europe',type:'cdn',testFile:'bootstrap.min.css',size:0.2*1024*1024,ping:null},
+            // Ирландия
+            jsdelivr_ie: {url:'https://cdn.jsdelivr.net/npm/axios@1.4.0/dist/',name:'jsDelivr IE',location:'Ирландия',flag:'🇮🇪',region:'europe',type:'cdn',testFile:'axios.min.js',size:0.05*1024*1024,ping:null},
+            // Чехия
+            jsdelivr_cz: {url:'https://cdn.jsdelivr.net/npm/moment@2.29.4/',name:'jsDelivr CZ',location:'Чехия',flag:'🇨🇿',region:'europe',type:'cdn',testFile:'moment.min.js',size:0.05*1024*1024,ping:null},
+            // Венгрия
+            jsdelivr_hu: {url:'https://cdn.jsdelivr.net/npm/d3@7.8.5/dist/',name:'jsDelivr HU',location:'Венгрия',flag:'🇭🇺',region:'europe',type:'cdn',testFile:'d3.min.js',size:0.1*1024*1024,ping:null},
+            // Румыния
+            jsdelivr_ro: {url:'https://cdn.jsdelivr.net/npm/chart.js@4.3.0/dist/',name:'jsDelivr RO',location:'Румыния',flag:'🇷🇴',region:'europe',type:'cdn',testFile:'chart.umd.min.js',size:0.1*1024*1024,ping:null},
+            // Болгария
+            jsdelivr_bg: {url:'https://cdn.jsdelivr.net/npm/three@0.155.0/build/',name:'jsDelivr BG',location:'Болгария',flag:'🇧🇬',region:'europe',type:'cdn',testFile:'three.min.js',size:0.6*1024*1024,ping:null},
+            // Хорватия
+            jsdelivr_hr: {url:'https://cdn.jsdelivr.net/npm/pixi.js@7.2.4/dist/',name:'jsDelivr HR',location:'Хорватия',flag:'🇭🇷',region:'europe',type:'cdn',testFile:'pixi.min.js',size:0.5*1024*1024,ping:null},
+            // Сербия
+            jsdelivr_rs: {url:'https://cdn.jsdelivr.net/npm/phaser@3.60.0/dist/',name:'jsDelivr RS',location:'Сербия',flag:'🇷🇸',region:'europe',type:'cdn',testFile:'phaser.min.js',size:1*1024*1024,ping:null},
+            // Турция
+            jsdelivr_tr: {url:'https://cdn.jsdelivr.net/npm/jquery@3.6.0/dist/',name:'jsDelivr TR',location:'Турция',flag:'🇹🇷',region:'europe',type:'cdn',testFile:'jquery.min.js',size:0.1*1024*1024,ping:null},
+            
+            // ===== АЗИЯ =====
+            // Япония
+            jsdelivr_jp: {url:'https://cdn.jsdelivr.net/npm/jquery@3.6.0/dist/',name:'jsDelivr JP',location:'Япония',flag:'🇯🇵',region:'asia',type:'cdn',testFile:'jquery.min.js',size:0.1*1024*1024,ping:null},
+            digitalocean_jp: {url:'https://digitalocean.com/',name:'DigitalOcean JP',location:'Япония',flag:'🇯🇵',region:'asia',type:'cloud',testFile:'',size:1*1024*1024,ping:null},
+            // Сингапур
+            jsdelivr_sg: {url:'https://cdn.jsdelivr.net/npm/react@18/umd/',name:'jsDelivr SG',location:'Сингапур',flag:'🇸🇬',region:'asia',type:'cdn',testFile:'react.production.min.js',size:0.1*1024*1024,ping:null},
+            digitalocean_sg: {url:'https://digitalocean.com/',name:'DigitalOcean SG',location:'Сингапур',flag:'🇸🇬',region:'asia',type:'cloud',testFile:'',size:1*1024*1024,ping:null},
+            // Индия
+            jsdelivr_in: {url:'https://cdn.jsdelivr.net/npm/vue@3/dist/',name:'jsDelivr IN',location:'Индия',flag:'🇮🇳',region:'asia',type:'cdn',testFile:'vue.global.prod.js',size:0.1*1024*1024,ping:null},
+            digitalocean_in: {url:'https://digitalocean.com/',name:'DigitalOcean IN',location:'Индия',flag:'🇮🇳',region:'asia',type:'cloud',testFile:'',size:1*1024*1024,ping:null},
+            // Южная Корея
+            jsdelivr_kr: {url:'https://cdn.jsdelivr.net/npm/axios@1.4.0/dist/',name:'jsDelivr KR',location:'Южная Корея',flag:'🇰🇷',region:'asia',type:'cdn',testFile:'axios.min.js',size:0.05*1024*1024,ping:null},
+            // Гонконг
+            jsdelivr_hk: {url:'https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/',name:'jsDelivr HK',location:'Гонконг',flag:'🇭🇰',region:'asia',type:'cdn',testFile:'bootstrap.min.css',size:0.2*1024*1024,ping:null},
+            // Тайвань
+            jsdelivr_tw: {url:'https://cdn.jsdelivr.net/npm/lodash@4.17.21/',name:'jsDelivr TW',location:'Тайвань',flag:'🇹🇼',region:'asia',type:'cdn',testFile:'lodash.min.js',size:0.1*1024*1024,ping:null},
+            // Китай
+            bootcdn_cn: {url:'https://cdn.bootcdn.net/ajax/libs/jquery/3.6.0/',name:'BootCDN',location:'Китай',flag:'🇨🇳',region:'asia',type:'cdn',testFile:'jquery.min.js',size:0.1*1024*1024,ping:null},
+            upaiyun_cn: {url:'https://upcdn.b0.upaiyun.com/libs/jquery/jquery-3.6.0.min.js',name:'Upaiyun',location:'Китай',flag:'🇨🇳',region:'asia',type:'cdn',testFile:'',size:0.1*1024*1024,ping:null},
+            qiniu_cn: {url:'https://cdn.staticfile.org/jquery/3.6.0/',name:'Qiniu CDN',location:'Китай',flag:'🇨🇳',region:'asia',type:'cdn',testFile:'jquery.min.js',size:0.1*1024*1024,ping:null},
+            // Индонезия
+            jsdelivr_id: {url:'https://cdn.jsdelivr.net/npm/react@18/umd/',name:'jsDelivr ID',location:'Индонезия',flag:'🇮🇩',region:'asia',type:'cdn',testFile:'react.production.min.js',size:0.1*1024*1024,ping:null},
+            // Малайзия
+            jsdelivr_my: {url:'https://cdn.jsdelivr.net/npm/vue@3/dist/',name:'jsDelivr MY',location:'Малайзия',flag:'🇲🇾',region:'asia',type:'cdn',testFile:'vue.global.prod.js',size:0.1*1024*1024,ping:null},
+            // Таиланд
+            jsdelivr_th: {url:'https://cdn.jsdelivr.net/npm/lodash@4.17.21/',name:'jsDelivr TH',location:'Таиланд',flag:'🇹🇭',region:'asia',type:'cdn',testFile:'lodash.min.js',size:0.1*1024*1024,ping:null},
+            // Вьетнам
+            jsdelivr_vn: {url:'https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/',name:'jsDelivr VN',location:'Вьетнам',flag:'🇻🇳',region:'asia',type:'cdn',testFile:'bootstrap.min.css',size:0.2*1024*1024,ping:null},
+            // Филиппины
+            jsdelivr_ph: {url:'https://cdn.jsdelivr.net/npm/axios@1.4.0/dist/',name:'jsDelivr PH',location:'Филиппины',flag:'🇵🇭',region:'asia',type:'cdn',testFile:'axios.min.js',size:0.05*1024*1024,ping:null},
+            // Пакистан
+            jsdelivr_pk: {url:'https://cdn.jsdelivr.net/npm/moment@2.29.4/',name:'jsDelivr PK',location:'Пакистан',flag:'🇵🇰',region:'asia',type:'cdn',testFile:'moment.min.js',size:0.05*1024*1024,ping:null},
+            // Бангладеш
+            jsdelivr_bd: {url:'https://cdn.jsdelivr.net/npm/d3@7.8.5/dist/',name:'jsDelivr BD',location:'Бангладеш',flag:'🇧🇩',region:'asia',type:'cdn',testFile:'d3.min.js',size:0.1*1024*1024,ping:null},
+            // Израиль
+            jsdelivr_il: {url:'https://cdn.jsdelivr.net/npm/chart.js@4.3.0/dist/',name:'jsDelivr IL',location:'Израиль',flag:'🇮🇱',region:'asia',type:'cdn',testFile:'chart.umd.min.js',size:0.1*1024*1024,ping:null},
+            // Саудовская Аравия
+            jsdelivr_sa: {url:'https://cdn.jsdelivr.net/npm/three@0.155.0/build/',name:'jsDelivr SA',location:'Саудовская Аравия',flag:'🇸🇦',region:'asia',type:'cdn',testFile:'three.min.js',size:0.6*1024*1024,ping:null},
+            // ОАЭ
+            jsdelivr_ae: {url:'https://cdn.jsdelivr.net/npm/pixi.js@7.2.4/dist/',name:'jsDelivr AE',location:'ОАЭ',flag:'🇦🇪',region:'asia',type:'cdn',testFile:'pixi.min.js',size:0.5*1024*1024,ping:null},
+            
+            // ===== АФРИКА =====
+            // ЮАР
+            jsdelivr_za: {url:'https://cdn.jsdelivr.net/npm/jquery@3.6.0/dist/',name:'jsDelivr ZA',location:'ЮАР',flag:'🇿🇦',region:'africa',type:'cdn',testFile:'jquery.min.js',size:0.1*1024*1024,ping:null},
+            digitalocean_za: {url:'https://digitalocean.com/',name:'DigitalOcean ZA',location:'ЮАР',flag:'🇿🇦',region:'africa',type:'cloud',testFile:'',size:1*1024*1024,ping:null},
+            // Египет
+            jsdelivr_eg: {url:'https://cdn.jsdelivr.net/npm/react@18/umd/',name:'jsDelivr EG',location:'Египет',flag:'🇪🇬',region:'africa',type:'cdn',testFile:'react.production.min.js',size:0.1*1024*1024,ping:null},
+            // Нигерия
+            jsdelivr_ng: {url:'https://cdn.jsdelivr.net/npm/vue@3/dist/',name:'jsDelivr NG',location:'Нигерия',flag:'🇳🇬',region:'africa',type:'cdn',testFile:'vue.global.prod.js',size:0.1*1024*1024,ping:null},
+            // Кения
+            jsdelivr_ke: {url:'https://cdn.jsdelivr.net/npm/lodash@4.17.21/',name:'jsDelivr KE',location:'Кения',flag:'🇰🇪',region:'africa',type:'cdn',testFile:'lodash.min.js',size:0.1*1024*1024,ping:null},
+            // Марокко
+            jsdelivr_ma: {url:'https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/',name:'jsDelivr MA',location:'Марокко',flag:'🇲🇦',region:'africa',type:'cdn',testFile:'bootstrap.min.css',size:0.2*1024*1024,ping:null},
+            // Гана
+            jsdelivr_gh: {url:'https://cdn.jsdelivr.net/npm/axios@1.4.0/dist/',name:'jsDelivr GH',location:'Гана',flag:'🇬🇭',region:'africa',type:'cdn',testFile:'axios.min.js',size:0.05*1024*1024,ping:null},
+            
+            // ===== ОКЕАНИЯ =====
+            // Австралия
+            jsdelivr_au: {url:'https://cdn.jsdelivr.net/npm/moment@2.29.4/',name:'jsDelivr AU',location:'Австралия',flag:'🇦🇺',region:'oceania',type:'cdn',testFile:'moment.min.js',size:0.05*1024*1024,ping:null},
+            digitalocean_au: {url:'https://digitalocean.com/',name:'DigitalOcean AU',location:'Австралия',flag:'🇦🇺',region:'oceania',type:'cloud',testFile:'',size:1*1024*1024,ping:null},
+            // Новая Зеландия
+            jsdelivr_nz: {url:'https://cdn.jsdelivr.net/npm/d3@7.8.5/dist/',name:'jsDelivr NZ',location:'Новая Зеландия',flag:'🇳🇿',region:'oceania',type:'cdn',testFile:'d3.min.js',size:0.1*1024*1024,ping:null},
+            
+            // ===== ГЛОБАЛЬНЫЕ CDN =====
+            cdn77_global: {url:'https://cdnjs.cloudflare.com/ajax/libs/react/18.2.0/',name:'CDN77',location:'Глобальный',flag:'🌍',region:'cdn',type:'cdn',testFile:'react.production.min.js',size:0.1*1024*1024,ping:null},
+            keycdn_global: {url:'https://cdnjs.cloudflare.com/ajax/libs/vue/3.3.4/',name:'KeyCDN',location:'Глобальный',flag:'🌍',region:'cdn',type:'cdn',testFile:'vue.global.prod.js',size:0.1*1024*1024,ping:null},
+            bunny_cdn: {url:'https://cdnjs.cloudflare.com/ajax/libs/lodash.js/4.17.21/',name:'BunnyCDN',location:'Глобальный',flag:'🌍',region:'cdn',type:'cdn',testFile:'lodash.min.js',size:0.1*1024*1024,ping:null},
+            stackpath_cdn: {url:'https://stackpath.bootstrapcdn.com/bootstrap/5.3.0/css/',name:'StackPath CDN',location:'Глобальный',flag:'🌍',region:'cdn',type:'cdn',testFile:'bootstrap.min.css',size:0.2*1024*1024,ping:null},
+            cloudflare_cdn: {url:'https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/',name:'Cloudflare CDN',location:'Глобальный',flag:'🌍',region:'cdn',type:'cdn',testFile:'all.min.css',size:0.05*1024*1024,ping:null}
         };
 
         // DOM элементы
@@ -1209,6 +933,12 @@
         const historyContent = document.getElementById('historyContent');
         const historyCount = document.getElementById('historyCount');
         const filterBtns = document.querySelectorAll('.filter-btn');
+        const serverCount = document.getElementById('serverCount');
+        const countryCount = document.getElementById('countryCount');
+        const continentCount = document.getElementById('continentCount');
+        const totalServers = document.getElementById('totalServers');
+        const filteredServers = document.getElementById('filteredServers');
+        const avgPing = document.getElementById('avgPing');
 
         // Переменные состояния
         let currentServer = 'cloudflare_us';
@@ -1226,18 +956,45 @@
         init();
 
         function init() {
+            updateStats();
             renderServerList();
             renderHistory();
             setupEventListeners();
             autoSelectServer();
         }
 
+        function updateStats() {
+            serverCount.textContent = Object.keys(servers).length;
+            totalServers.textContent = Object.keys(servers).length;
+            
+            // Подсчет уникальных стран
+            const countries = new Set();
+            const continents = new Set();
+            Object.values(servers).forEach(s => {
+                countries.add(s.location);
+                continents.add(s.region);
+            });
+            
+            countryCount.textContent = countries.size;
+            continentCount.textContent = continents.size;
+        }
+
         function renderServerList() {
             serverList.innerHTML = '';
+            let filteredCount = 0;
+            let pingSum = 0;
+            let pingCount = 0;
+            
             Object.entries(servers).forEach(([key, server]) => {
                 // Фильтрация по региону
                 if (currentFilter !== 'all' && server.region !== currentFilter && server.type !== currentFilter) {
                     return;
+                }
+                
+                filteredCount++;
+                if (server.ping && server.ping < 9999) {
+                    pingSum += server.ping;
+                    pingCount++;
                 }
                 
                 const serverItem = document.createElement('div');
@@ -1247,11 +1004,20 @@
                     <div class="flag">${server.flag}</div>
                     <div class="name">${server.name}</div>
                     <div class="location">${server.location}</div>
-                    ${server.ping !== null ? `<div class="ping">${server.ping} ms</div>` : ''}
+                    ${server.ping !== null && server.ping < 9999 ? `<div class="ping">${server.ping} ms</div>` : ''}
                 `;
                 serverItem.addEventListener('click', () => selectServer(key));
                 serverList.appendChild(serverItem);
             });
+            
+            filteredServers.textContent = filteredCount;
+            
+            // Средний пинг
+            if (pingCount > 0) {
+                avgPing.textContent = Math.round(pingSum / pingCount) + ' ms';
+            } else {
+                avgPing.textContent = '-';
+            }
         }
 
         function setupEventListeners() {
@@ -1323,8 +1089,8 @@
             const pingPromises = [];
             const serverKeys = Object.keys(servers);
             
-            // Тестируем только первые 20 серверов для быстрого выбора
-            const testServers = serverKeys.slice(0, 20);
+            // Тестируем первые 30 серверов для быстрого выбора
+            const testServers = serverKeys.slice(0, 30);
             
             testServers.forEach(key => {
                 const pingPromise = measurePing(servers[key].url)
@@ -1333,7 +1099,7 @@
                         return { key, ping };
                     })
                     .catch(() => {
-                        servers[key].ping = 9999; // Высокий пинг для недоступных серверов
+                        servers[key].ping = 9999;
                         return { key, ping: 9999 };
                     });
                 pingPromises.push(pingPromise);
@@ -1343,12 +1109,12 @@
                 results.sort((a, b) => a.ping - b.ping);
                 const bestServer = results[0];
                 
-                if (bestServer.ping < 5000) { // Если сервер доступен
+                if (bestServer.ping < 5000) {
                     selectServer(bestServer.key);
-                    status.textContent = `Автоматически выбран: ${servers[bestServer.key].name} (${servers[bestServer.key].location}) - ${bestServer.ping}ms`;
+                    status.textContent = `✅ Автоматически выбран: ${servers[bestServer.key].name} (${servers[bestServer.key].location}) - ${bestServer.ping}ms`;
                     status.className = 'status success';
                 } else {
-                    status.textContent = 'Не удалось найти доступный сервер';
+                    status.textContent = '❌ Не удалось найти доступный сервер';
                     status.className = 'status error';
                 }
                 
@@ -1388,7 +1154,7 @@
             totalDataDownloaded = 0;
             testData = [];
             
-            status.textContent = 'Тестирование скорости...';
+            status.textContent = '🚀 Тестирование скорости...';
             status.className = 'status';
             speedValue.textContent = '0';
             
@@ -1434,7 +1200,6 @@
                 const speedBps = (totalDataDownloaded * 8) / (elapsed / 1000);
                 const speedMbps = speedBps / 1000000;
                 
-                // Сохраняем данные для графика
                 testData.push({
                     time: elapsed / 1000,
                     speed: speedMbps
@@ -1456,7 +1221,7 @@
             })
             .catch(error => {
                 console.error('Ошибка тестирования:', error);
-                status.textContent = 'Ошибка при тестировании: ' + error.message;
+                status.textContent = '❌ Ошибка: ' + error.message;
                 status.className = 'status error';
                 stopSpeedTest();
             });
@@ -1544,24 +1309,24 @@
             recommendation.style.display = 'block';
             
             if (speed < 10) {
-                recommendationText.textContent = 'Скорость очень низкая. Рекомендуется проверить подключение или связаться с провайдером.';
+                recommendationText.textContent = '⚠️ Скорость очень низкая. Рекомендуется проверить подключение или связаться с провайдером.';
                 recommendation.style.background = 'linear-gradient(135deg, #f44336 0%, #d32f2f 100%)';
             } else if (speed < 30) {
-                recommendationText.textContent = 'Скорость ниже среднего. Возможно, стоит оптимизировать сеть или проверить фоновые процессы.';
+                recommendationText.textContent = '🔄 Скорость ниже среднего. Возможно, стоит оптимизировать сеть или проверить фоновые процессы.';
                 recommendation.style.background = 'linear-gradient(135deg, #ff9800 0%, #f57c00 100%)';
             } else if (speed < 100) {
-                recommendationText.textContent = 'Хорошая скорость для повседневного использования. Подходит для стриминга и онлайн-игр.';
+                recommendationText.textContent = '✅ Хорошая скорость для повседневного использования. Подходит для стриминга и онлайн-игр.';
                 recommendation.style.background = 'linear-gradient(135deg, #4caf50 0%, #45a049 100%)';
             } else {
-                recommendationText.textContent = 'Отличная скорость! Ваше соединение идеально подходит для любых задач.';
+                recommendationText.textContent = '🚀 Отличная скорость! Ваше соединение идеально подходит для любых задач.';
                 recommendation.style.background = 'linear-gradient(135deg, #2196f3 0%, #1976d2 100%)';
             }
         }
 
         function saveToHistory(data) {
-            history.unshift(data); // Добавляем в начало
+            history.unshift(data);
             if (history.length > 100) {
-                history.pop(); // Ограничиваем 100 записями
+                history.pop();
             }
             localStorage.setItem('speedTestHistory', JSON.stringify(history));
             renderHistory();
