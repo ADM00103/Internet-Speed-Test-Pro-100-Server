@@ -635,7 +635,7 @@
                         </div>
                     </div>
                     
-                    <div class="server-filters">
+                    <div class="server-filters" id="serverFilters">
                         <button class="filter-btn active" data-filter="all">Все</button>
                         <button class="filter-btn" data-filter="northamerica">Сев. Америка</button>
                         <button class="filter-btn" data-filter="southamerica">Юж. Америка</button>
@@ -932,7 +932,8 @@
         const clearHistoryBtn = document.getElementById('clearHistoryBtn');
         const historyContent = document.getElementById('historyContent');
         const historyCount = document.getElementById('historyCount');
-        const filterBtns = document.querySelectorAll('.filter-btn');
+        const serverFilters = document.getElementById('serverFilters');
+        const filterBtns = serverFilters.querySelectorAll('.filter-btn');
         const serverCount = document.getElementById('serverCount');
         const countryCount = document.getElementById('countryCount');
         const continentCount = document.getElementById('continentCount');
@@ -1023,8 +1024,9 @@
         function setupEventListeners() {
             // Выбор сервера
             serverList.addEventListener('click', (e) => {
-                if (e.target.classList.contains('server-item') && !isTesting) {
-                    const serverKey = e.target.dataset.server;
+                const serverItem = e.target.closest('.server-item');
+                if (serverItem && !isTesting) {
+                    const serverKey = serverItem.dataset.server;
                     selectServer(serverKey);
                 }
             });
@@ -1058,9 +1060,10 @@
                 }
             });
 
-            // Фильтры серверов
+            // Фильтры серверов - исправленный обработчик
             filterBtns.forEach(btn => {
-                btn.addEventListener('click', () => {
+                btn.addEventListener('click', (e) => {
+                    e.preventDefault();
                     filterBtns.forEach(b => b.classList.remove('active'));
                     btn.classList.add('active');
                     currentFilter = btn.dataset.filter;
@@ -1089,8 +1092,8 @@
             const pingPromises = [];
             const serverKeys = Object.keys(servers);
             
-            // Тестируем первые 30 серверов для быстрого выбора
-            const testServers = serverKeys.slice(0, 30);
+            // Тестируем первые 20 серверов для быстрого выбора
+            const testServers = serverKeys.slice(0, 20);
             
             testServers.forEach(key => {
                 const pingPromise = measurePing(servers[key].url)
@@ -1119,18 +1122,24 @@
                 }
                 
                 renderServerList();
+            }).catch(error => {
+                console.error('Ошибка авто-выбора:', error);
+                status.textContent = '❌ Ошибка при авто-выборе сервера';
+                status.className = 'status error';
             });
         }
 
         function measurePing(url) {
             return new Promise((resolve, reject) => {
+                // Используем простой GET запрос вместо HEAD
                 const startTime = Date.now();
                 fetch(url + '?_=' + Date.now(), { 
-                    method: 'HEAD',
+                    method: 'GET',
                     mode: 'cors',
-                    cache: 'no-cache'
+                    cache: 'no-cache',
+                    credentials: 'omit'
                 })
-                .then(() => {
+                .then(response => {
                     const ping = Date.now() - startTime;
                     resolve(ping);
                 })
@@ -1180,15 +1189,29 @@
         function testDownloadSpeed() {
             const server = servers[currentServer];
             const timestamp = Date.now();
-            const testUrl = server.url + (server.testFile ? server.testFile + (server.testFile.includes('?') ? '&' : '?') + timestamp : '');
+            let testUrl = server.url;
+            
+            // Формируем правильный URL в зависимости от сервера
+            if (server.testFile) {
+                if (server.testFile.includes('?')) {
+                    testUrl += server.testFile + '&_=' + timestamp;
+                } else if (server.url.endsWith('/')) {
+                    testUrl += server.testFile + '?_=' + timestamp;
+                } else {
+                    testUrl += '/' + server.testFile + '?_=' + timestamp;
+                }
+            } else {
+                testUrl += '?_=' + timestamp;
+            }
             
             fetch(testUrl, { 
                 cache: 'no-store',
-                mode: 'cors'
+                mode: 'cors',
+                credentials: 'omit'
             })
             .then(response => {
                 if (!response.ok) {
-                    throw new Error('Ошибка загрузки файла');
+                    throw new Error('Ошибка загрузки файла: ' + response.status);
                 }
                 return response.blob();
             })
